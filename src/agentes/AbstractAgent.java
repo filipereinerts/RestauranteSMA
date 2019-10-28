@@ -14,7 +14,7 @@ public class AbstractAgent extends Agent {
     
     protected void enviarMensagem(String conteudo, String destinatario, Serializable obj) {
         
-        System.out.println(this.getName() + " SEND MESSAGE");
+        System.out.println(this.getName() + " >>> " + conteudo);
         
         addBehaviour(new OneShotBehaviour() {
             @Override
@@ -52,7 +52,7 @@ public class AbstractAgent extends Agent {
                
                if(msg != null){
                    
-                   System.out.println(myAgent.getName() + " RECEIVE MESSAGE");
+//                   System.out.println(myAgent.getName() + " <<< " + msg.getProtocol());
                    
                    try {
                        selectAction(msg);
@@ -90,6 +90,12 @@ public class AbstractAgent extends Agent {
     protected static boolean isCozinheiro(ACLMessage message){
         
         return message.getSender().equals(new AID("Cozinheiro", AID.ISLOCALNAME));
+        
+    }
+    
+    protected static boolean isGerente(ACLMessage message){
+        
+        return message.getSender().equals(new AID("Gerente", AID.ISLOCALNAME));
         
     }
     

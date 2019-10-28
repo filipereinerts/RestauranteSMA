@@ -21,58 +21,65 @@ public class Pedido implements Serializable {
         pedidoEm = LocalDateTime.now();
         
     }
-   
-   public void preparar(){
-       
-        Random rand = new Random();
+    
+    public void preparar(){
         
-        try {
-            Thread.sleep(rand.nextInt(3000));
-        } catch(InterruptedException e){    
-        }
-       
-        pedidoErrado = rand.nextInt(3000) > 2000;
-        pedidoFrio = rand.nextInt(3000) > 2000;
-        preparadoEm = LocalDateTime.now();
-       
-   }
-   
-   public void reclamar(){
-       
-        pedidoEm = LocalDateTime.now();
-        reclamacoes++;
-       
-   }
-   
-   public void entregar(){
-       
-       Random rand = new Random();
+        preparar(false);
         
-        try {
-            Thread.sleep(rand.nextInt(1000));
-        } catch(InterruptedException e){    
-        }
-        
-        entregueEm = LocalDateTime.now();
-       
-   }
+    }
    
-   public long tempoDeEntrega(){
-       
-       if(pedidoEm == null || entregueEm == null) return 0;
-       
-       Duration periodo = Duration.between(pedidoEm, entregueEm);
-       
-       return periodo.toMillis();
-       
-   }
+    public void preparar(boolean doGerente){
+
+         Random rand = new Random();
+
+         try {
+             Thread.sleep(rand.nextInt(doGerente ? 200 : 3000));
+         } catch(InterruptedException e){    
+         }
+
+         pedidoErrado = rand.nextInt(doGerente ? 2050 : 3000) > 2000;
+         pedidoErrado = true;
+         pedidoFrio = rand.nextInt(doGerente ? 2050 : 3000) > 2000;
+         preparadoEm = LocalDateTime.now();
+
+    }
    
-   public boolean foiDemorado(){
-       
-       long tempoAceito = (new Random()).nextInt(2000) + 2000;
-       
-       return tempoDeEntrega() > tempoAceito;
-       
-   }
+    public void reclamar(){
+
+         pedidoEm = LocalDateTime.now();
+         reclamacoes++;
+
+    }
+
+    public void entregar(){
+
+         Random rand = new Random();
+
+         try {
+             Thread.sleep(rand.nextInt(1000));
+         } catch(InterruptedException e){    
+         }
+
+         entregueEm = LocalDateTime.now();
+
+    }
+
+    public long tempoDeEntrega(){
+
+        if(pedidoEm == null || entregueEm == null) return 0;
+
+        Duration periodo = Duration.between(pedidoEm, entregueEm);
+
+        return periodo.toMillis();
+
+    }
+
+    public boolean foiDemorado(){
+
+        long tempoAceito = (new Random()).nextInt(2000) + 2000;
+
+        return tempoDeEntrega() > tempoAceito;
+
+    }
     
 }

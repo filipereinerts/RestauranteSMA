@@ -1,8 +1,5 @@
 package agentes;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Pedido;
 
 public class Cliente extends AbstractAgent {
@@ -18,32 +15,30 @@ public class Cliente extends AbstractAgent {
     @Override
     protected void selectAction(ACLMessage message) throws Exception {
         
-        try {
+        if(AbstractAgent.isGarcom(message)){
             
             Pedido p = (Pedido) message.getContentObject();
             
-            if(p.foiDemorado()){
-                
-                p.reclamar();
-                
-            }
+            if(p.foiDemorado()) p.reclamar();
             
-            if(p.pedidoErrado || p.pedidoFrio){
+            if(p.reclamacoes > 3){
+                
+                enviarMensagem("CHAMAR_GERENTE", "Garcom", p);
+                
+            } else if(p.pedidoErrado || p.pedidoFrio){
                 
                 if(p.pedidoErrado) p.reclamar();
                 if(p.pedidoFrio) p.reclamar();
                 
-                enviarMensagem("REENVIAR_PEDIDO", "Garcom", new Pedido());
-                
-            } else if(p.reclamacoes > 4){
-                
-                enviarMensagem("CHAMAR_GERENTE", "Garcom", p);
+                enviarMensagem("REENVIAR_PEDIDO", "Garcom", p);
                 
             }
             
-       } catch (UnreadableException ex) {
-           Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-       }
+        } else {
+            
+            enviarMensagem("ENVIAR_PEDIDO", "Garcom", new Pedido());
+            
+        }
         
         super.selectAction(message);
         

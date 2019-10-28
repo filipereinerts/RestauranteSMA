@@ -1,7 +1,6 @@
 package agentes;
 
 import jade.lang.acl.ACLMessage;
-import jade.util.leap.Serializable;
 import main.Pedido;
 
 public class Garcom extends AbstractAgent {
@@ -16,23 +15,27 @@ public class Garcom extends AbstractAgent {
     @Override
     protected void selectAction(ACLMessage message) throws Exception {
         
+        Pedido p = (Pedido) message.getContentObject();
+        
         if(AbstractAgent.isCliente(message)){
             
             if(message.getProtocol().equals("CHAMAR_GERENTE")){
                 
-                System.out.println("CHAMAR GERENTE");
+                enviarMensagem("CLIENTE_CHAMOU", "Gerente", p);
+                
+            } else if(p.reclamacoes > 2) {
+                
+                enviarMensagem("COZINHEIRO_ERRANDO", "Gerente", p);
                 
             } else {
                 
-                enviarMensagem("PREPARAR_PEDIDO", "Cozinheiro", (Serializable) message.getContentObject());
+                enviarMensagem("PREPARAR_PEDIDO", "Cozinheiro", p);
                 
             }            
 
         } else if(AbstractAgent.isCozinheiro(message)){
             
-            Pedido p = (Pedido) message.getContentObject();
             p.entregar();
-            
             enviarMensagem("PEDIDO_ENTREGUE", "Cliente", p);
 
         }

@@ -4,7 +4,7 @@ import jade.lang.acl.ACLMessage;
 import main.Pedido;
 
 
-public class Cozinheiro extends AbstractAgent {
+public class Gerente extends AbstractAgent {
     
      @Override
     protected void setup (){
@@ -18,15 +18,13 @@ public class Cozinheiro extends AbstractAgent {
         
         Pedido p = (Pedido) message.getContentObject();
         
-        if(AbstractAgent.isGarcom(message)){
+        if(message.getProtocol().equals("COZINHEIRO_ERRANDO")){
             
-            p.preparar();
-            enviarMensagem("PEDIDO_PRONTO", "Garcom", p);
-
-        } else if(AbstractAgent.isGerente(message)){
+            enviarMensagem("PREPARAR_PEDIDO_DIREITO", "Cozinheiro", p);
             
-            p.preparar(true);
-            enviarMensagem("PEDIDO_PRONTO", "Garcom", p);
+        } else {
+            
+            System.out.println("GERENTE PISTOLANDO DEMITINDO TODO MUNDO");
             
         }
         
