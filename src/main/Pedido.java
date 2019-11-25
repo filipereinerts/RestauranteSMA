@@ -38,7 +38,6 @@ public class Pedido implements Serializable {
          }
 
          pedidoErrado = rand.nextInt(doGerente ? 2050 : 3000) > 2000;
-         pedidoErrado = true;
          pedidoFrio = rand.nextInt(doGerente ? 2050 : 3000) > 2000;
          preparadoEm = LocalDateTime.now();
 

@@ -17,7 +17,7 @@ public class Main {
         
         String[] params = new String[2];
         params[0] = "-gui";
-        params[1] = "Cliente:agentes.Cliente; Cozinheiro:agentes.Cozinheiro; Garcom:agentes.Garcom; Gerente:agentes.Gerente";
+        params[1] = "Cozinheiro:agentes.Cozinheiro; Garcom:agentes.Garcom; Gerente:agentes.Gerente; Cliente:agentes.Cliente";
         
         Boot.main(params);
         

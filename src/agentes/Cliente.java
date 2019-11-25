@@ -1,5 +1,11 @@
 package agentes;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.Pedido;
 
 public class Cliente extends AbstractAgent {
@@ -7,7 +13,12 @@ public class Cliente extends AbstractAgent {
     @Override
     protected void setup (){
         
-        enviarMensagem("ENVIAR_PEDIDO", "Garcom", new Pedido());
+        try {
+            enviarMensagem("ENVIAR_PEDIDO", "Garcom", new Pedido(), getGarcom());
+        } catch (FIPAException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         receberMensagem();
         
     }
@@ -41,6 +52,19 @@ public class Cliente extends AbstractAgent {
         }
         
         super.selectAction(message);
+        
+    }
+    
+    private DFAgentDescription[] getGarcom() throws FIPAException {
+        
+        DFAgentDescription template = new DFAgentDescription();
+        
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("Atendimento");
+        template.addServices(sd);
+        
+        return DFService.search(this, template);
+         
         
     }
     

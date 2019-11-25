@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
 import jade.util.leap.Serializable;
 import java.io.IOException;
@@ -11,6 +12,42 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AbstractAgent extends Agent {
+    
+    protected void enviarMensagem(String conteudo, String destinatario, Serializable obj, DFAgentDescription[] search) {
+        
+        System.out.println(this.getName() + " >>> " + conteudo);
+        
+        addBehaviour(new OneShotBehaviour() {
+            @Override
+            public void action() {
+                
+                ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+                
+                if(search.length > 0){
+                    msg.addReceiver(search[0].getName());
+                } else {
+                    msg.addReceiver(new AID(destinatario, AID.ISLOCALNAME));
+                }
+                
+                msg.setSender(myAgent.getAID());
+                
+                if(obj != null){
+                    try {
+                        msg.setContentObject(obj);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Garcom.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                msg.setProtocol(conteudo);
+                
+                
+                myAgent.send(msg);
+                
+            }
+            
+        });
+        
+    }
     
     protected void enviarMensagem(String conteudo, String destinatario, Serializable obj) {
         
@@ -52,7 +89,7 @@ public class AbstractAgent extends Agent {
                
                if(msg != null){
                    
-//                   System.out.println(myAgent.getName() + " <<< " + msg.getProtocol());
+                   System.out.println(myAgent.getName() + " <<< " + msg.getProtocol());
                    
                    try {
                        selectAction(msg);
